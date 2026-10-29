@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DSA journal · question list</title>
+<style>
+:root{--bg:#fafaf9;--fg:#1c1917;--muted:#78716c;--card:#fff;--border:#e7e5e4;--accent:#c2410c;
+--solved:#15803d;--hint:#b45309;--learned:#2563eb;--mastered:#7c3aed;--todo:#a8a29e;--E:#15803d;--M:#b45309;--H:#dc2626}
+@media(prefers-color-scheme:dark){:root{--bg:#0c0a09;--fg:#f5f5f4;--muted:#a8a29e;--card:#1c1917;--border:#292524;--accent:#fb923c;
+--solved:#4ade80;--hint:#fbbf24;--learned:#60a5fa;--mastered:#a78bfa;--todo:#57534e;--E:#4ade80;--M:#fbbf24;--H:#f87171}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.45 system-ui,-apple-system,sans-serif}
+.wrap{max-width:920px;margin:0 auto;padding:28px 16px 60px}
+h1{font-size:22px;margin:0 0 4px}.sub{color:var(--muted);margin:0 0 20px}.sub a{color:var(--accent)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin-bottom:10px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 12px}
+.stat b{display:block;font-size:22px}.stat span{color:var(--muted);font-size:12px}
+.bar{display:flex;height:8px;border-radius:4px;overflow:hidden;background:var(--border);margin:6px 0 18px}
+.bar i{display:block;height:100%}
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:14px}
+.chip{border:1px solid var(--border);background:var(--card);color:var(--fg);border-radius:999px;padding:5px 12px;cursor:pointer;font:inherit;font-size:13px}
+.chip.on{border-color:var(--accent);color:var(--accent);font-weight:600}
+input[type=search]{flex:1;min-width:160px;border:1px solid var(--border);background:var(--card);color:var(--fg);border-radius:8px;padding:6px 10px;font:inherit}
+.sep{width:1px;height:22px;background:var(--border)}
+details{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:8px}
+summary{display:flex;gap:10px;align-items:center;padding:10px 14px;cursor:pointer;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary .t{font-weight:600;flex:1}summary .c{color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums}
+.mini{width:80px;height:5px;border-radius:3px;background:var(--border);overflow:hidden}.mini i{display:block;height:100%;background:var(--solved)}
+table{width:100%;border-collapse:collapse}td{padding:6px 14px;border-top:1px solid var(--border);vertical-align:middle}
+td.n{color:var(--muted);width:42px;font-variant-numeric:tabular-nums}td.d{width:30px;font-weight:700;font-size:12px}
+td.p{color:var(--muted);font-size:12px;width:150px}td.s{width:150px;font-size:12px;white-space:nowrap}td.code{width:60px;text-align:right}
+a{color:var(--fg);text-decoration:none}a:hover{text-decoration:underline}td.code a{color:var(--accent);font-size:12px}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:1px}
+.empty{color:var(--muted);padding:20px;text-align:center}
+.foot{color:var(--muted);font-size:12px;margin-top:24px}
+@media(max-width:600px){td.p,td.n{display:none}}
+</style></head><body><div class="wrap">
+<h1>DSA journal</h1>
+<p class="sub">Every question I'm working through: the PWP 60-day sprint, then the rest of the NeetCode 150. Solutions are my own Python code. <a href="https://github.com/knownIndie/dsa-journal">Repo</a></p>
+<div class="stats" id="stats"></div>
+<div class="bar" id="bar"></div>
+<div class="controls">
+<button class="chip on" data-view="day">By day</button><button class="chip" data-view="pattern">By pattern</button>
+<span class="sep"></span>
+<button class="chip on" data-f="all">All</button><button class="chip" data-f="todo">To do</button><button class="chip" data-f="done">Done</button><button class="chip" data-f="learned">Learned</button>
+<input type="search" id="q" placeholder="Search problems">
+</div>
+<div id="list"></div>
+<p class="foot" id="foot"></p>
+</div><script>
+const ST={todo:["To do","var(--todo)"],solved:["✅ Solved","var(--solved)"],"with-hint":["🟡 Solved with hint","var(--hint)"],learned:["📘 Learned","var(--learned)"],mastered:["🟢 Mastered","var(--mastered)"]};
+const DONE=new Set(["solved","with-hint","mastered"]);
+let Q=[],view="day",filt="all",term="";
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"})[c]);
+function stats(){const c={todo:0,solved:0,"with-hint":0,learned:0,mastered:0};Q.forEach(q=>c[q.status]++);const done=c.solved+c["with-hint"]+c.mastered,T=Q.length;
+document.getElementById("stats").innerHTML=[[done+"/"+T,"done"],[c.mastered,"🟢 mastered"],[c.solved,"✅ solved"],[c["with-hint"],"🟡 with hint"],[c.learned,"📘 learned"],[c.todo,"to do"]].map(([b,s])=>`<div class="stat"><b>${b}</b><span>${s}</span></div>`).join("");
+document.getElementById("bar").innerHTML=["mastered","solved","with-hint","learned"].map(k=>`<i style="width:${c[k]/T*100}%;background:${ST[k][1]}"></i>`).join("");}
+function keep(q){if(filt==="todo"&&q.status!=="todo")return false;if(filt==="done"&&!DONE.has(q.status))return false;if(filt==="learned"&&q.status!=="learned")return false;
+return !term||(q.title+" "+q.pattern).toLowerCase().includes(term);}
+function groups(){const g=new Map();for(const q of Q){let k;if(view==="pattern")k=q.pattern;else if(q.part===2)k="Round 2 · NeetCode";else k="Day "+q.day+" · "+q.topic;
+if(!g.has(k))g.set(k,[]);g.get(k).push(q);}if(view==="pattern")return [...g].sort((a,b)=>a[0].localeCompare(b[0]));return [...g];}
+function render(){const open=!!term||filt!=="all";const html=groups().map(([k,qs])=>{const vis=qs.filter(keep);if(!vis.length)return"";
+const d=qs.filter(q=>DONE.has(q.status)).length;
+return `<details${open?" open":""}><summary><span class="t">${esc(k)}</span><span class="c">${d}/${qs.length}</span><span class="mini"><i style="width:${d/qs.length*100}%"></i></span></summary><table>${vis.map(q=>
+`<tr><td class="n">${q.n}</td><td class="d" style="color:var(--${q.diff})">${q.diff}</td><td><a href="https://leetcode.com/problems/${q.slug}/" target="_blank">${esc(q.title)}</a></td><td class="p">${esc(q.pattern)}</td><td class="s"><span class="dot" style="background:${ST[q.status][1]}"></span>${ST[q.status][0]}</td><td class="code">${q.solution?`<a href="https://github.com/knownIndie/dsa-journal/blob/main/${q.solution}">code</a>`:""}</td></tr>`).join("")}</table></details>`}).join("");
+document.getElementById("list").innerHTML=html||'<p class="empty">Nothing matches.</p>';}
+document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>{view=b.dataset.view;document.querySelectorAll("[data-view]").forEach(x=>x.classList.toggle("on",x===b));render()});
+document.querySelectorAll("[data-f]").forEach(b=>b.onclick=()=>{filt=b.dataset.f;document.querySelectorAll("[data-f]").forEach(x=>x.classList.toggle("on",x===b));render()});
+document.getElementById("q").oninput=e=>{term=e.target.value.trim().toLowerCase();render()};
+fetch("questions.json",{cache:"no-store"}).then(r=>r.json()).then(d=>{Q=d.questions;document.getElementById("foot").textContent="Last synced "+d.updated+".";stats();render()});
+</script></body></html>
