@@ -15,7 +15,7 @@ Status: ✅ solved alone · 🟡 solved with a hint · 🟢 mastered (2 clean so
 | 2 | [Running Sum of 1d Array](https://leetcode.com/problems/running-sum-of-1d-array/) | 00-basics | E | ✅ solved | Time: O(n) · Space: O(n) | [python](solutions/00-basics/running-sum-of-1d-array/) |
 | 3 | [FizzBuzz](https://leetcode.com/problems/fizz-buzz/) | 00-basics | E | ✅ solved | Time: O(n) · Space: O(n) | [python](solutions/00-basics/fizz-buzz/) |
 | 9 | [Two Sum](https://leetcode.com/problems/two-sum/) | 01-hashing | E | ✅ solved | Time: O(n) · Space: O(n) | [python](solutions/01-hashing/two-sum/) |
-| 10 | [Contains Duplicate](https://leetcode.com/problems/contains-duplicate/) | 01-hashing | E | 🟡 solved-with-hint | Time: O(n) · Space: O(n) | [python](solutions/01-hashing/contains-duplicate/) |
+| 10 | [Contains Duplicate](https://leetcode.com/problems/contains-duplicate/) | 01-hashing | E | ✅ solved | Time: O(n) · Space: O(n) | [python](solutions/01-hashing/contains-duplicate/) |
 | 13 | [Group Anagrams](https://leetcode.com/problems/group-anagrams/) | 01-hashing | M | ✅ solved | Time: O(n·k log k) · Space: O(n·k), n = number of strings, k = longest string | [python](solutions/01-hashing/group-anagrams/) |
+| 18 | [3Sum](https://leetcode.com/problems/3sum/) | 02-two-pointers | M | 📘 learned |  | — |
 | 25 | [Best Time to Buy and Sell Stock](https://leetcode.com/problems/best-time-to-buy-and-sell-stock/) | 03-sliding-window | E | ✅ solved | Time: O(n) · Space: O(1) | [python](solutions/03-sliding-window/best-time-to-buy-and-sell-stock/) |
-| 165 | [Longest Consecutive Sequence](https://leetcode.com/problems/longest-consecutive-sequence/) | 01-hashing | M | 📘 learned |  | — |
